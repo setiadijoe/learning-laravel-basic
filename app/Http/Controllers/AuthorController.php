@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class AuthorController extends Controller
 {
@@ -14,7 +16,8 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        $authors = Author::all();
+        return AuthorResource::collection($authors);
     }
 
     /**
@@ -25,7 +28,15 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'bail|unique|required'
+        ]);
+
+        Author::insert($request->all()+[
+            'id' => Uuid::uuid4()
+        ]);
+
+        return response()->json();
     }
 
     /**
@@ -59,6 +70,6 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        return $author->delete();
     }
 }

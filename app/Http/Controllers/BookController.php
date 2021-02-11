@@ -31,16 +31,16 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'author_id'  => 'required',
-            'category_id' => 'required',
-            'title' => 'required'
+            'author_id'  => 'bail|unique|required',
+            'category_id' => 'bail|required',
+            'title' => 'bail|required'
         ]);
 
-        Book::create($request->all()+[
+        Book::insert($request->all()+[
             'id' => Uuid::uuid4()
             ]);
 
-        return redirect()->route('books.index')->with('success', 'Book Created Successfully');
+        return response()->json();
     }
 
     /**
@@ -51,7 +51,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return view('book', ['book' => $book]);
+        return new BookResource($book);
     }
 
     /**
@@ -63,7 +63,13 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        Book::find($request->id);
+        $book->fill($request->all()+[
+            'description' => $request->description,
+            'status' => $request->status
+        ])->save();
+
+        return new BookResource($book);
     }
 
     /**
@@ -74,6 +80,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return response()->json();
     }
 }

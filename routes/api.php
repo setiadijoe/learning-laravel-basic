@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
+use App\Http\Resources\AuthorResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +26,4 @@ Route::get('/health', function () {
 });
 
 Route::apiResource('books', BookController::class);
+Route::apiResource('authors', AuthorController::class);
