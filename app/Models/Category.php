@@ -9,6 +9,12 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $casts = ['id' => 'string'];
+
+    protected $table = 'categories';
+
+    public $fillable = ['name'];
+
     public function books()
     {
         return $this->hasMany(Book::class);

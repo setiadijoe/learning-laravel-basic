@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
+
 
 class BookController extends Controller
 {
@@ -14,8 +18,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
-        return response()->json(["books"=>"Banyak"]);
+        $books = Book::all();
+        return BookResource::collection($books);
     }
 
     /**
@@ -26,7 +30,17 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'author_id'  => 'required',
+            'category_id' => 'required',
+            'title' => 'required'
+        ]);
+
+        Book::create($request->all()+[
+            'id' => Uuid::uuid4()
+            ]);
+
+        return redirect()->route('books.index')->with('success', 'Book Created Successfully');
     }
 
     /**
@@ -37,7 +51,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return view('book', ['book' => $book]);
     }
 
     /**
