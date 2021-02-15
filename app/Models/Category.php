@@ -11,11 +11,11 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $casts = ['id' => 'string'];
-
     protected $table = 'categories';
 
     public $fillable = ['name'];
+
+    public $incrementing = false;
 
     public function books()
     {
@@ -27,12 +27,12 @@ class Category extends Model
         return $this->where('id', $categoryId)->first();
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            $model->id = Uuid::uuid4();
-        });
-    }
+    //     static::creating(function ($model) {
+    //         $model->id = Uuid::uuid4();
+    //     });
+    // }
 }

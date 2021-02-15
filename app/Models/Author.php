@@ -14,7 +14,7 @@ class Author extends Model
 
     public $fillable = ['name'];
 
-    protected $casts = ['id' => 'string'];
+    public $incrementing = false;
 
     public function books()
     {
@@ -26,12 +26,12 @@ class Author extends Model
         return $this->where('id', $authorId)->first();
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            $model->id = Uuid::uuid4();
-        });
-    }
+    //     static::creating(function ($model) {
+    //         $model->id = Uuid::uuid4();
+    //     });
+    // }
 }

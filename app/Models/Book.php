@@ -12,9 +12,9 @@ class Book extends Model
 
     protected $table = 'books';
 
-    protected $casts = ['id' => 'string'];
-
     public $fillable = ['title', 'description', 'status'];
+
+    public $incrementing = false;
 
     public function author()
     {
@@ -26,12 +26,12 @@ class Book extends Model
         return $this->belongsTo(Category::class);
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($model) {
-            $model->id = Uuid::uuid4();
-        });
-    }
+    //     static::creating(function ($model) {
+    //         $model->id = Uuid::uuid4();
+    //     });
+    // }
 }

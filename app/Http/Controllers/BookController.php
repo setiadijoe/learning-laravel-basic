@@ -7,7 +7,7 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+use Ramsey\Uuid\Uuid;
 
 class BookController extends Controller
 {
@@ -36,7 +36,9 @@ class BookController extends Controller
             'title' => 'bail|required'
         ]);
 
-        Book::insert($request->all());
+        Book::insert($request->all()+[
+            'id' => Uuid::uuid4()
+        ]);
 
         return response()->json();
     }
@@ -61,22 +63,26 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book, Category $category, Author $author)
     {
-        $validated = $request->validated();
+        $request->validate([
+            'description' => 'bail|required',
+            'status' => 'bail|required'
+            ]);
 
-        $categoryCheck = $category->checkCategory($request->category_id);
-        if(!$categoryCheck){
-            return response()->json(["message" => "category_unknown"], 422);
-        }
+        // dd($request->all());
+        // $categoryCheck = $category->checkCategory($request->category_id);
+        // if(!$categoryCheck){
+        //     return response()->json(["message" => "category_unknown"], 422);
+        // }
 
-        $authorCheck = $author->checkAuthor($request->author_id);
-        if(!$authorCheck){
-            return response()->json(["message" => "author_unknown"], 422);
-        }
+        // $authorCheck = $author->checkAuthor($request->author_id);
+        // if(!$authorCheck){
+        //     return response()->json(["message" => "author_unknown"], 422);
+        // }
 
-        $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
-        if($checkIfExisting){
-            return response()->json(["message" => "book_is_exists"], 422);
-        }
+        // $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
+        // if($checkIfExisting){
+        //     return response()->json(["message" => "book_is_exists"], 422);
+        // }
 
         $book->update($request->all());
 
