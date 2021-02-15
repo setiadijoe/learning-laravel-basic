@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Ramsey\Uuid\Uuid;
 
 class AuthorController extends Controller
@@ -36,7 +37,7 @@ class AuthorController extends Controller
             'id' => Uuid::uuid4()
         ]);
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -59,13 +60,14 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
+        // dd($request->all());
         $this->validate($request,[
             'name' => 'required'
         ]);
 
         $author->update($request->all());
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -76,6 +78,7 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        return $author->delete();
+        $author->delete();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Ramsey\Uuid\Uuid;
 
 class CategoryController extends Controller
@@ -39,7 +40,7 @@ class CategoryController extends Controller
 
         Category::create($request->all());
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -68,9 +69,8 @@ class CategoryController extends Controller
 
         $category->update($request->all());
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -80,6 +80,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

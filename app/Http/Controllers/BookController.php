@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Ramsey\Uuid\Uuid;
 
 class BookController extends Controller
@@ -40,7 +41,7 @@ class BookController extends Controller
             'id' => Uuid::uuid4()
         ]);
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -86,7 +87,7 @@ class BookController extends Controller
 
         $book->update($request->all());
 
-        return response()->json();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -98,6 +99,6 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $book->delete();
-        return response()->json();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
