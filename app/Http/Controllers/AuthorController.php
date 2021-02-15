@@ -62,7 +62,7 @@ class AuthorController extends Controller
 
         $author->update($request->all());
 
-        return response()->json(["message" => "Ubah buku berhasil"], 200);
+        return response()->json();
     }
 
     /**
