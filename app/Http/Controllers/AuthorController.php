@@ -29,7 +29,7 @@ class AuthorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'bail|unique|required'
+            'name' => 'bail|required'
         ]);
 
         Author::insert($request->all()+[
@@ -47,7 +47,7 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        //
+        return new AuthorResource($author);
     }
 
     /**
@@ -59,7 +59,13 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required'
+        ]);
+
+        $author->update($request->all());
+
+        return response()->json(["message" => "Ubah buku berhasil"], 200);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Models\Author;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 
@@ -61,15 +62,28 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $book, Category $category, Author $author)
     {
-        Book::find($request->id);
-        $book->fill($request->all()+[
-            'description' => $request->description,
-            'status' => $request->status
-        ])->save();
+        $validated = $request->validated();
 
-        return new BookResource($book);
+        $categoryCheck = $category->checkCategory($request->category_id);
+        if(!$categoryCheck){
+            return response()->json(["message" => "category_unknown"], 422);
+        }
+
+        $authorCheck = $author->checkAuthor($request->author_id);
+        if(!$authorCheck){
+            return response()->json(["message" => "author_unknown"], 422);
+        }
+
+        $checkIfExisting = $book->isExist($request->category_id, $request->author_id, $request->title);
+        if($checkIfExisting){
+            return response()->json(["message" => "book_is_exists"], 422);
+        }
+
+        $book->update($request->all());
+
+        return response()->json();
     }
 
     /**

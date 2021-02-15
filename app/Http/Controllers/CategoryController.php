@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -23,9 +26,20 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Category $category)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required'
+        ]);
+
+        $categoryCheck = $category->isExist($request->name);
+        if($categoryCheck){
+            return response()->json(["message" => "category_is_exists"], 422);
+        }
+
+        Category::create($request->all());
+
+        return response()->json();
     }
 
     /**
@@ -36,7 +50,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
 
     /**
@@ -48,7 +62,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required'
+        ]);
+
+        $category->update($request->all());
+
+        return response()->json();
     }
 
     /**
@@ -59,6 +79,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json();
     }
 }
