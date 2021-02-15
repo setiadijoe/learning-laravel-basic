@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
 
 class AuthorController extends Controller
 {
@@ -32,9 +31,7 @@ class AuthorController extends Controller
             'name' => 'bail|required'
         ]);
 
-        Author::insert($request->all()+[
-            'id' => Uuid::uuid4()
-        ]);
+        Author::insert($request->all());
 
         return response()->json();
     }

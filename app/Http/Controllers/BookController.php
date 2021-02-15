@@ -7,7 +7,6 @@ use App\Models\Book;
 use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
 
 
 class BookController extends Controller
@@ -37,9 +36,7 @@ class BookController extends Controller
             'title' => 'bail|required'
         ]);
 
-        Book::insert($request->all()+[
-            'id' => Uuid::uuid4()
-            ]);
+        Book::insert($request->all());
 
         return response()->json();
     }
