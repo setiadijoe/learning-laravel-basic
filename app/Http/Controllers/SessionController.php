@@ -11,17 +11,18 @@ class SessionController extends Controller
 {
     public function auth(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'email'	=> 'required',
             'password' => 'required'
         ]);
 
         $user = User::where('email', $request->email)->first();
+        // dd($user, $request->all());
         if(!$user || !Hash::check($request->password, $user->password)){
             return response()->json(["message" => "email_or_password_invalid"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        return response()->json(["access_token" => $user->createToken('my-token')->plainTextToken], Response::HTTP_CREATED);
+        return response()->json(["access_token" => $user->createToken('token-login')->plainTextToken], Response::HTTP_CREATED);
     }
 
     public function logout(Request $request)

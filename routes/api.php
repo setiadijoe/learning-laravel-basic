@@ -26,10 +26,10 @@ Route::get('/health', function () {
     return response()->json(["message"=>"Hello World"]);
 });
 
-Route::post('login', [SessionController::class, 'auth']);
+Route::post('/login', [SessionController::class, 'auth']);
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    Route::Post('logout', [SessionController::class, 'logout']);
+    Route::Post('/logout', [SessionController::class, 'logout']);
 
     Route::apiResource('books', BookController::class);
     Route::apiResource('authors', AuthorController::class);
