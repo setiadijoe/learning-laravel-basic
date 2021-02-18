@@ -30,4 +30,13 @@ class AuthorTest extends TestCase
         $response = $this->json('POST', '/api/authors', $data, ['Accept' => 'application/json', 'Content-Type' => 'application/json']);
         $response->assertStatus(Response::HTTP_CREATED);
     }
+
+    public function testAddAuthorWithoutBody()
+    {
+        $data = null;
+
+        $response = $this->json('PUT'. '/api/authors', $data, ['Accept' => 'application/json', 'Content-Type' => 'application/json']);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+        $response->assertJsonValidationErrors('The name field is required', 'errors');
+    }
 }

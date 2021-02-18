@@ -29,4 +29,13 @@ class CategoryTest extends TestCase
         $response = $this->json('POST', '/api/categories', $data, ['Accept' => 'application/json', 'Content-Type' => 'application/json']);
         $response->assertStatus(Response::HTTP_CREATED);
     }
+
+    public function testAddCategoryWithoutBody()
+    {
+        $data = null;
+
+        $response = $this->json('PUT'. '/api/categories', $data, ['Accept' => 'application/json', 'Content-Type' => 'application/json']);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+        $response->assertJsonValidationErrors('The name field is required', 'errors');
+    }
 }
