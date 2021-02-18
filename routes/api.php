@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,13 @@ Route::get('/health', function () {
     return response()->json(["message"=>"Hello World"]);
 });
 
-Route::apiResource('books', BookController::class);
-Route::apiResource('authors', AuthorController::class);
-Route::apiResource('categories', CategoryController::class);
+Route::post('login', [SessionController::class, 'auth']);
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::Post('logout', [SessionController::class, 'logout']);
+
+    Route::apiResource('books', BookController::class);
+    Route::apiResource('authors', AuthorController::class);
+    Route::apiResource('categories', CategoryController::class);
+});
+
