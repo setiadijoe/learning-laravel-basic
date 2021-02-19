@@ -29,10 +29,6 @@ class CategoryController extends Controller
      */
     public function store(Request $request, Category $category)
     {
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
-
         $categoryCheck = $category->isExist($request->name);
         if($categoryCheck){
             return response()->json(["message" => "category_is_exists"], 422);

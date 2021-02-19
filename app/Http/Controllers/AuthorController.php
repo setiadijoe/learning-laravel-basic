@@ -29,10 +29,6 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'bail|required'
-        ]);
-
         Author::insert($request->all()+[
             'id' => Uuid::uuid4()
         ]);

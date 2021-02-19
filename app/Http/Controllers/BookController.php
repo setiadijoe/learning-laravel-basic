@@ -31,12 +31,6 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'author_id'  => 'bail|unique|required',
-            'category_id' => 'bail|required',
-            'title' => 'bail|required'
-        ]);
-
         Book::insert($request->all()+[
             'id' => Uuid::uuid4()
         ]);
