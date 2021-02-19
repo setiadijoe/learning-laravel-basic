@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -27,14 +28,15 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Category $category)
+    public function store(CategoryRequest $request, Category $category)
     {
-        $categoryCheck = $category->isExist($request->name);
+        $validated = $request->validated();
+        $categoryCheck = $category->isExist($validated['name']);
         if($categoryCheck){
             return response()->json(["message" => "category_is_exists"], 422);
         }
 
-        Category::create($request->all());
+        Category::create($validated);
 
         return response()->json(null, Response::HTTP_CREATED);
     }

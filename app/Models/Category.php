@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 
 class Category extends Model
@@ -27,12 +27,18 @@ class Category extends Model
         return $this->where('id', $categoryId)->first();
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
+    public function isExist($name)
+    {
+        return $this->where('name', $name)->first();
+    }
 
-    //     static::creating(function ($model) {
-    //         $model->id = Uuid::uuid4();
-    //     });
-    // }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
+    }
+
 }
