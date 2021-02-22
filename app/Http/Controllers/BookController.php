@@ -30,9 +30,19 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(BookRequest $request)
+    public function store(BookRequest $request, Author $author, Category $category)
     {
         $validated = $request->validated();
+
+        $isAuthorExists = $author->checkAuthor($validated['author_id']);
+        if(!$isAuthorExists) {
+            return response()->json(["message" => "author_not_exists"], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $isCategoryExists = $category->checkCategory($validated['category_id']);
+        if (!$isCategoryExists) {
+            return response()->json(["message" => "category_not_exists"], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         $newBook = new Book;
         $newBook->author_id = $validated['author_id'];
