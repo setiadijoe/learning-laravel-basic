@@ -32,9 +32,14 @@ class BookController extends Controller
      */
     public function store(BookRequest $request)
     {
-        Book::insert($request->all()+[
-            'id' => Uuid::uuid4()
-        ]);
+        $validated = $request->validated();
+
+        $newBook = new Book;
+        $newBook->author_id = $validated['author_id'];
+        $newBook->category_id = $validated['category_id'];
+        $newBook->id = Uuid::uuid4();
+        $newBook->fill($validated);
+        $newBook->save();
 
         return response()->json(null, Response::HTTP_CREATED);
     }

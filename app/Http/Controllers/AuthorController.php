@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthorRequest;
 use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
@@ -27,11 +28,15 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorRequest $request, Author $author)
     {
-        Author::insert($request->all()+[
-            'id' => Uuid::uuid4()
-        ]);
+        $validated = $request->validated();
+        $checkAuthor = $author->isExist($validated['name']);
+        if ($checkAuthor) {
+            return response()->json(["message" => "author_is_existed"]);
+        }
+
+        Author::created($validated);
 
         return response()->json(null, Response::HTTP_CREATED);
     }
