@@ -37,7 +37,6 @@ class AuthorController extends Controller
         }
 
         Author::created($validated);
-
         return response()->json(null, Response::HTTP_CREATED);
     }
 
